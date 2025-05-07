@@ -101,13 +101,21 @@ export default function Home() {
       if (searchTimeout) {
         clearTimeout(searchTimeout);
       }
-    };
+  };
   }, [searchTimeout]);
 
   const handleDomainFilterChange = (newFilters) => {
     setFilters(prev => ({ ...prev, domain: newFilters.domain }));
     // Track filter application
     trackEvent(AnalyticsActions.FILTER_APPLY, { filters: newFilters });
+  };
+
+  const handleClearCategory = () => {
+    setFilters(prev => ({ ...prev, domain: null }));
+    // Track category clear
+    trackEvent(AnalyticsActions.FILTER_APPLY, { filters: { domain: null } });
+    // Clear the selected domain in the Filters component
+    handleDomainFilterChange({ domain: null });
   };
 
   const handleCategoryClick = (category) => {
@@ -143,12 +151,28 @@ export default function Home() {
       </Typography>
       <Box sx={{ 
         display: 'flex', 
-        justifyContent: 'center',
+        flexDirection: 'column',
+        alignItems: 'center',
         mb: 3,
         width: '100%'
       }}>
+        <Typography 
+          variant="body1" 
+          sx={{ 
+            mb: 2,
+            textAlign: 'center',
+            color: 'text.secondary',
+            fontSize: '0.9rem'
+          }}
+        >
+          Zoek in alle activiteiten of categorie
+        </Typography>
         <Box sx={{ width: '400px' }}>
-          <SearchBar onSearch={handleSearch} />
+          <SearchBar 
+            onSearch={handleSearch} 
+            selectedCategory={filters.domain}
+            onClearCategory={handleClearCategory}
+          />
         </Box>
       </Box>
       <Filters 

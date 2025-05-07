@@ -1,11 +1,18 @@
 'use client';
-import { Container, Paper, Typography, Button } from '@mui/material';
-import Link from 'next/link';
+import { Container, Paper, Typography, Button, Link } from '@mui/material';
+import NextLink from 'next/link';
 import { useEffect, useState } from 'react';
 
 export default function ActivityDetails({ params }) {
   const [activity, setActivity] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // Function to format URL with proper protocol
+  const formatUrl = (url) => {
+    if (!url || url === 'Not specified') return null;
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+    return `https://${url}`;
+  };
 
   useEffect(() => {
     // Get activity details from sessionStorage
@@ -53,7 +60,7 @@ export default function ActivityDetails({ params }) {
         <Typography variant="h4" component="h1" gutterBottom>
           Activiteit niet gevonden
         </Typography>
-        <Button component={Link} href="/" variant="contained">
+        <Button component={NextLink} href="/" variant="contained">
           Terug naar overzicht
         </Button>
       </Container>
@@ -104,7 +111,25 @@ export default function ActivityDetails({ params }) {
           <strong>📞 Contact:</strong> {getField(['Contact', 'Contact info', 'Contactgegevens'])}
         </Typography>
         <Typography paragraph sx={{ mb: 2 }}>
-          <strong>🔗 Website:</strong> {getField(['website', 'Link', 'URL'])}
+          <strong>🔗 Website:</strong>{' '}
+          {getField(['website', 'Link', 'URL']) && getField(['website', 'Link', 'URL']) !== 'Not specified' ? (
+            <Link 
+              href={formatUrl(getField(['website', 'Link', 'URL']))} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              sx={{ 
+                color: '#0066cc',
+                textDecoration: 'none',
+                '&:hover': {
+                  textDecoration: 'underline'
+                }
+              }}
+            >
+              {getField(['website', 'Link', 'URL'])}
+            </Link>
+          ) : (
+            'Not specified'
+          )}
         </Typography>
 
         <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
@@ -115,7 +140,7 @@ export default function ActivityDetails({ params }) {
         </Typography>
 
         <Button 
-          component={Link} 
+          component={NextLink} 
           href="/" 
           variant="contained" 
           sx={{ mt: 2 }}

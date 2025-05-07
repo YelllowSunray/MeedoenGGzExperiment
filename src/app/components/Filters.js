@@ -53,22 +53,13 @@ const documentCategories = [
   'Overig'
 ];
 
-export default function Filters({ onFilterChange }) {
+export default function Filters({ filters, onFilterChange }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const [selectedDomain, setSelectedDomain] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState('');
 
   const handleDomainClick = (domain) => {
-    const newDomain = selectedDomain === domain ? null : domain;
-    setSelectedDomain(newDomain);
-    onFilterChange({ domain: newDomain, category: selectedCategory });
-  };
-
-  const handleCategoryChange = (event) => {
-    const newCategory = event.target.value;
-    setSelectedCategory(newCategory);
-    onFilterChange({ domain: selectedDomain, category: newCategory });
+    const newDomain = filters.domain === domain ? null : domain;
+    onFilterChange({ domain: newDomain, category: filters.category });
   };
 
   return (
@@ -92,10 +83,10 @@ export default function Filters({ onFilterChange }) {
                     height: '100%',
                     p: 1.5,
                     borderRadius: 1,
-                    backgroundColor: selectedDomain === domain ? 'primary.main' : 'background.paper',
-                    color: selectedDomain === domain ? 'primary.contrastText' : 'text.secondary',
+                    backgroundColor: filters.domain === domain ? 'primary.main' : 'background.paper',
+                    color: filters.domain === domain ? 'primary.contrastText' : 'text.secondary',
                     '&:hover': {
-                      backgroundColor: selectedDomain === domain ? 'primary.dark' : 'action.hover',
+                      backgroundColor: filters.domain === domain ? 'primary.dark' : 'action.hover',
                     },
                     transition: 'all 0.2s ease',
                   }}
@@ -110,7 +101,7 @@ export default function Filters({ onFilterChange }) {
                   textAlign: 'center',
                   fontSize: '0.75rem',
                   fontWeight: 500,
-                  color: selectedDomain === domain ? 'primary.main' : 'text.secondary',
+                  color: filters.domain === domain ? 'primary.main' : 'text.secondary',
                 }}
               >
                 {label}
